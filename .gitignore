@@ -1,0 +1,28 @@
+# Base de datos local — NUNCA subir
+ruta_cafes.db
+
+# Entornos virtuales de Python
+venv/
+.venv/
+
+# Caché de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Configuración local / secretos
+.env
+.env.*
+!.env.example
+
+# Archivos de configuración locales de IDE
+.vscode/
+.idea/
+
+# Archivos de DB Browser for SQLite
+*.sqbpro
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

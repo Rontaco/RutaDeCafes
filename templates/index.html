@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>☕ Ruta de Cafés</h1>
+
+    <form method="GET" action="{{ url_for('index') }}" class="buscador">
+        <input type="text" name="q" placeholder="DNI / Nombre / Apellido" value="{{ texto }}">
+        <button type="submit" class="btn btn-secondary">Buscar</button>
+    </form>
+
+    <div class="acciones">
+        <a href="{{ url_for('nuevo_cliente') }}" class="btn btn-primary">+ Nuevo cliente</a>
+    </div>
+
+    <h2>Resultados</h2>
+
+    {% if clientes %}
+        <div class="grid-clientes">
+        {% for cliente in clientes %}
+            <a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}" class="cliente-card" style="text-decoration:none;">
+                <div>
+                    <div class="nombre">{{ cliente['nombre'] }} {{ cliente['apellido'] }}</div>
+                    <div class="dni">DNI: {{ cliente['dni'] }}</div>
+                </div>
+                <span>→</span>
+            </a>
+        {% endfor %}
+        </div>
+    {% else %}
+        <p>No se encontraron clientes.</p>
+    {% endif %}
+{% endblock %}

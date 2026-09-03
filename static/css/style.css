@@ -1,0 +1,219 @@
+:root {
+    --color-bg: #f3ede0;
+    --color-bg-card: #fbf8f1;
+    --color-primary: #3f4a34;
+    --color-primary-hover: #2e3627;
+    --color-accent: #8a9a6b;
+    --color-text: #2e2a20;
+    --color-text-suave: #6b6455;
+    --color-border: #ddd4bd;
+    --color-danger: #a1443c;
+    --color-danger-hover: #7f342e;
+    --color-exito: #4b5d3a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    margin: 0;
+    padding: 0;
+}
+
+.contenedor {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+}
+
+h1 {
+    color: var(--color-primary);
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: 10px;
+}
+
+h2 {
+    color: var(--color-primary);
+    font-size: 18px;
+    margin-top: 30px;
+}
+
+a {
+    color: var(--color-primary);
+}
+
+/* Mensajes flash */
+.mensajes {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+}
+
+.mensajes li {
+    background-color: var(--color-bg-card);
+    border-left: 4px solid var(--color-accent);
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Buscador */
+.buscador {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.buscador input[type="text"] {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: var(--color-bg-card);
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+.btn-primary:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+.btn-secondary:hover {
+    background-color: var(--color-bg-card);
+}
+
+.btn-danger {
+    background-color: var(--color-danger);
+    color: white;
+}
+.btn-danger:hover {
+    background-color: var(--color-danger-hover);
+}
+
+.acciones {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+/* Tarjetas de resultados de búsqueda */
+.grid-clientes {
+    display: grid;
+    gap: 12px;
+}
+
+.cliente-card {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cliente-card .nombre {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.cliente-card .dni {
+    font-size: 13px;
+    color: var(--color-text-suave);
+}
+
+/* Ficha de cliente */
+.card {
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.estado-activo {
+    color: var(--color-exito);
+    font-weight: 600;
+}
+
+.estado-inactivo {
+    color: var(--color-text-suave);
+    font-weight: 600;
+}
+
+.progreso {
+    font-size: 30px;
+    letter-spacing: 8px;
+    color: var(--color-accent);
+}
+
+.aviso-cortesia {
+    background-color: var(--color-exito);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Historial */
+.historial {
+    list-style: none;
+    padding: 0;
+}
+
+.historial li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 14px;
+}
+
+/* Formularios */
+form.formulario label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--color-text-suave);
+}
+
+form.formulario input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: var(--color-bg-card);
+}
+
+form.formulario button {
+    margin-top: 20px;
+}

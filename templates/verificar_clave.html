@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Acceso protegido</h1>
+    <p>Esta acción requiere contraseña.</p>
+
+    <form method="POST">
+        <input type="hidden" name="next" value="{{ destino }}">
+        <label for="clave">Contraseña:</label>
+        <input type="password" id="clave" name="clave" required>
+        <button type="submit">Ingresar</button>
+    </form>
+
+    <p><a href="{{ url_for('index') }}">Cancelar</a></p>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Editar cliente</h1>
+
+    <form method="POST" class="formulario">
+        <label for="dni">DNI:</label>
+        <input type="text" id="dni" name="dni" value="{{ cliente['dni'] }}" required><br>
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" value="{{ cliente['nombre'] }}" required><br>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" value="{{ cliente['apellido'] }}" required><br>
+
+        <label for="email">Email (opcional):</label>
+        <input type="email" id="email" name="email" value="{{ cliente['email'] or '' }}"><br>
+
+        <label for="edad">Edad (opcional):</label>
+        <input type="number" id="edad" name="edad" value="{{ cliente['edad'] or '' }}"><br>
+
+        <label for="clave">Contraseña:</label>
+        <input type="password" id="clave" name="clave" required><br>
+
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </form>
+
+    <p><a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}">Cancelar</a></p>
+{% endblock %}

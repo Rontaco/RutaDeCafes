@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Dar de baja a {{ cliente['nombre'] }} {{ cliente['apellido'] }}</h1>
+    <p>¿Confirmás que querés dar de baja a este cliente? Sus datos e historial se van a conservar, pero dejará de aparecer en las búsquedas.</p>
+
+    <form method="POST">
+        <label for="clave">Contraseña:</label>
+        <input type="password" id="clave" name="clave" required><br>
+
+        <button type="submit">Confirmar baja</button>
+    </form>
+
+    <p><a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}">Cancelar</a></p>
+{% endblock %}

@@ -1,15 +1,21 @@
 {% extends "base.html" %}
 
+{% block volver %}
+    <a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}" class="btn-volver">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver
+    </a>
+{% endblock %}
+
 {% block content %}
     <h1>Dar de baja a {{ cliente['nombre'] }} {{ cliente['apellido'] }}</h1>
     <p>¿Confirmás que querés dar de baja a este cliente? Sus datos e historial se van a conservar, pero dejará de aparecer en las búsquedas.</p>
 
-    <form method="POST">
+    <form method="POST" class="formulario">
         <label for="clave">Contraseña:</label>
         <input type="password" id="clave" name="clave" required><br>
 
-        <button type="submit">Confirmar baja</button>
+        <button type="submit" class="btn btn-danger">Confirmar baja</button>
     </form>
 
-    <p><a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}">Cancelar</a></p>
 {% endblock %}

@@ -19,7 +19,8 @@ def init_db():
 
 if __name__ == '__main__':
     init_db()
-def crear_cliente(dni, nombre, apellido, email, edad):
+
+def crear_cliente(dni, nombre, apellido, email, fecha_nacimiento):
     """
     Inserta un nuevo cliente en la base de datos.
     Devuelve (True, None) si se creó correctamente,
@@ -28,33 +29,36 @@ def crear_cliente(dni, nombre, apellido, email, edad):
     conn = get_connection()
     try:
         conn.execute(
-            '''INSERT INTO clientes (dni, nombre, apellido, email, edad)
+            '''INSERT INTO clientes (dni, nombre, apellido, email, fecha_nacimiento)
                VALUES (?, ?, ?, ?, ?)''',
-            (dni, nombre, apellido, email, edad)
+            (dni, nombre, apellido, email, fecha_nacimiento)
         )
         conn.commit()
         return True, None
     except sqlite3.IntegrityError:
         return False, "Ya existe un cliente registrado con ese DNI."
     finally:
-        conn.close()    
-def buscar_clientes(texto=''):
+        conn.close()
+
+def buscar_clientes(texto='', activo=True):
     """
-    Busca clientes activos cuyo DNI, nombre o apellido contengan el texto dado.
-    Si texto está vacío, devuelve todos los clientes activos.
+    Busca clientes (activos o inactivos, según el parámetro 'activo')
+    cuyo DNI, nombre o apellido contengan el texto dado.
+    Si texto está vacío, devuelve todos los clientes de ese estado.
     """
     conn = get_connection()
     patron = f'%{texto}%'
     filas = conn.execute(
-        '''SELECT id, dni, nombre, apellido, email, edad
+        '''SELECT id, dni, nombre, apellido, email, fecha_nacimiento
            FROM clientes
-           WHERE activo = 1
+           WHERE activo = ?
              AND (dni LIKE ? OR nombre LIKE ? OR apellido LIKE ?)
            ORDER BY apellido, nombre''',
-        (patron, patron, patron)
+        (1 if activo else 0, patron, patron, patron)
     ).fetchall()
     conn.close()
     return filas
+
 def obtener_cliente(cliente_id):
     """Devuelve una fila con los datos del cliente, o None si no existe."""
     conn = get_connection()
@@ -77,7 +81,7 @@ def obtener_historial_compras(cliente_id):
 
 def calcular_progreso(cliente_id):
     """
-    Calcula el progreso del cliente hacia la próxima cortesía,
+    Calcula el progreso del cliente hacia la próxima cortesía (ciclo de 7),
     a partir del historial de compras (no de un contador guardado).
     """
     conn = get_connection()
@@ -92,10 +96,10 @@ def calcular_progreso(cliente_id):
     conn.close()
 
     # Compras pagas acumuladas DESDE la última cortesía entregada
-    progreso_actual = compras_pagas - (cortesias_entregadas * 5)
-    corresponde_cortesia = progreso_actual > 0 and progreso_actual % 5 == 0
+    progreso_actual = compras_pagas - (cortesias_entregadas * 7)
+    corresponde_cortesia = progreso_actual > 0 and progreso_actual % 7 == 0
 
-    display = 5 if corresponde_cortesia else progreso_actual
+    display = 7 if corresponde_cortesia else progreso_actual
 
     return {
         'compras_pagas': compras_pagas,
@@ -122,7 +126,7 @@ def registrar_compra(cliente_id):
 
     return es_cortesia
 
-def actualizar_cliente(cliente_id, dni, nombre, apellido, email, edad):
+def actualizar_cliente(cliente_id, dni, nombre, apellido, email, fecha_nacimiento):
     """
     Actualiza los datos de un cliente existente.
     Devuelve (True, None) si se actualizó correctamente,
@@ -132,9 +136,9 @@ def actualizar_cliente(cliente_id, dni, nombre, apellido, email, edad):
     try:
         conn.execute(
             '''UPDATE clientes
-               SET dni = ?, nombre = ?, apellido = ?, email = ?, edad = ?
+               SET dni = ?, nombre = ?, apellido = ?, email = ?, fecha_nacimiento = ?
                WHERE id = ?''',
-            (dni, nombre, apellido, email, edad, cliente_id)
+            (dni, nombre, apellido, email, fecha_nacimiento, cliente_id)
         )
         conn.commit()
         return True, None

@@ -1,8 +1,15 @@
+@font-face {
+    font-family: 'Montserrat Medium';
+    src: url('../fonts/montserrat-medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
 :root {
     --color-bg: #f3ede0;
     --color-bg-card: #fbf8f1;
-    --color-primary: #3f4a34;
-    --color-primary-hover: #2e3627;
+    --color-primary: #4C5E43;
+    --color-primary-hover: #3a4735;
     --color-accent: #8a9a6b;
     --color-text: #2e2a20;
     --color-text-suave: #6b6455;
@@ -216,4 +223,109 @@ form.formulario input {
 
 form.formulario button {
     margin-top: 20px;
+}
+/* Progreso de café - barra y tazas */
+.barra-progreso {
+    background-color: var(--color-border);
+    border-radius: 20px;
+    height: 14px;
+    overflow: hidden;
+    margin: 10px 0 16px;
+}
+
+.barra-progreso-relleno {
+    background-color: var(--color-accent);
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.3s ease;
+}
+
+.progreso-tazas {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+.taza-llena {
+    opacity: 1;
+}
+
+.taza-vacia {
+    opacity: 0.25;
+    filter: grayscale(100%);
+}
+
+.progreso-texto {
+    font-size: 14px;
+    color: var(--color-text-suave);
+    margin: 0 0 10px;
+}
+
+.btn-exito {
+    background-color: var(--color-exito);
+    color: white;
+}
+.btn-exito:hover {
+    background-color: #3a4a2c;
+}
+/* Botón volver, fijo arriba a la izquierda */
+.btn-volver {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
+    padding: 8px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    z-index: 100;
+}
+
+.btn-volver:hover {
+    background-color: var(--color-border);
+}
+
+.btn-volver svg {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* Header principal (reutilizable) */
+.site-header {
+    background-color: var(--color-primary);
+    padding: 24px 20px;
+    margin-bottom: 24px;
+}
+
+.site-header-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.site-header-logo {
+    height: 180px;
+    width: auto;
+}
+
+.site-header-title {
+    font-family: 'Montserrat Medium', 'Segoe UI', Arial, sans-serif;
+    color: var(--color-bg);
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }

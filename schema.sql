@@ -4,7 +4,7 @@ CREATE TABLE clientes (
     nombre TEXT NOT NULL,
     apellido TEXT NOT NULL,
     email TEXT,
-    edad INTEGER,
+    fecha_nacimiento DATE,
     fecha_alta DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     activo BOOLEAN NOT NULL DEFAULT 1
 );

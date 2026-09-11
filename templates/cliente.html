@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block volver %}
+    <a href="{{ url_for('index') }}" class="btn-volver">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver
+    </a>
+{% endblock %}
+
 {% block content %}
     <h1>{{ cliente['nombre'] }} {{ cliente['apellido'] }}</h1>
 
@@ -7,7 +14,7 @@
         <p>
             DNI: {{ cliente['dni'] }}<br>
             Email: {{ cliente['email'] or '-' }}<br>
-            Edad: {{ cliente['edad'] or '-' }}<br>
+            Fecha de nacimiento: {{ cliente['fecha_nacimiento'] or '-' }}<br>
             Estado:
             {% if cliente['activo'] %}
                 <span class="estado-activo">Activo</span>
@@ -17,22 +24,35 @@
         </p>
     </div>
 
-    <div class="card">
+        <div class="card">
         <h2 style="margin-top:0;">Progreso hacia la próxima cortesía</h2>
-        <p class="progreso">
-            {% for i in range(5) %}
-                {% if i < progreso.display %}●{% else %}○{% endif %}
+
+        <div class="barra-progreso">
+            <div class="barra-progreso-relleno" style="width: { { (progreso.display / 7 * 100) | round(0, 'floor') }}%;"></div>
+        </div>
+
+        <div class="progreso-tazas">
+            {% for i in range(7) %}
+                {% if i < progreso.display %}
+                    <span class="taza taza-llena">☕</span>
+                {% else %}
+                    <span class="taza taza-vacia">☕</span>
+                {% endif %}
             {% endfor %}
-        </p>
+        </div>
+
+        <p class="progreso-texto">{{ progreso.display }} / 7 cafés</p>
 
         {% if progreso.corresponde_cortesia %}
-            <p class="aviso-cortesia">¡Corresponde café de cortesía!</p>
+            <p class="aviso-cortesia">¡Corresponde café de cortesía! ☕🎉</p>
         {% endif %}
     </div>
 
     <div class="acciones">
-        <form method="POST" action="{{ url_for('registrar_compra', cliente_id=cliente['id']) }}">
-            <button type="submit" class="btn btn-primary">Registrar compra</button>
+                <form method="POST" action="{{ url_for('registrar_compra', cliente_id=cliente['id']) }}">
+            <button type="submit" class="btn {% if progreso.corresponde_cortesia %}btn-exito{% else %}btn-primary{% endif %}">
+                {% if progreso.corresponde_cortesia %}☕ Registrar cortesía{% else %}Registrar compra{% endif %}
+            </button>
         </form>
         <a href="{{ url_for('editar_cliente', cliente_id=cliente['id']) }}" class="btn btn-secondary">Editar</a>
         {% if cliente['activo'] %}
@@ -55,6 +75,4 @@
     {% else %}
         <p>Este cliente todavía no tiene compras registradas.</p>
     {% endif %}
-
-    <p><a href="{{ url_for('index') }}">← Volver</a></p>
 {% endblock %}

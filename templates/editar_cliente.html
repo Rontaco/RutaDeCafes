@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block volver %}
+    <a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}" class="btn-volver">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver
+    </a>
+{% endblock %}
+
 {% block content %}
     <h1>Editar cliente</h1>
 
@@ -16,8 +23,8 @@
         <label for="email">Email (opcional):</label>
         <input type="email" id="email" name="email" value="{{ cliente['email'] or '' }}"><br>
 
-        <label for="edad">Edad (opcional):</label>
-        <input type="number" id="edad" name="edad" value="{{ cliente['edad'] or '' }}"><br>
+        <label for="fecha_nacimiento">Fecha de nacimiento (opcional):</label>
+        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ cliente['fecha_nacimiento'] or '' }}"><br>
 
         <label for="clave">Contraseña:</label>
         <input type="password" id="clave" name="clave" required><br>
@@ -25,5 +32,4 @@
         <button type="submit" class="btn btn-primary">Guardar cambios</button>
     </form>
 
-    <p><a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}">Cancelar</a></p>
 {% endblock %}

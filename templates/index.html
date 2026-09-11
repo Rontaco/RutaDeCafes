@@ -1,18 +1,33 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <h1>☕ Ruta de Cafés</h1>
+{% block header %}
+    <header class="site-header">
+        <div class="site-header-inner">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Ruta de Cafés" class="site-header-logo">
+            <span class="site-header-title">Ruta de Cafés</span>
+        </div>
+    </header>
+{% endblock %}
 
+{% block content %}
     <form method="GET" action="{{ url_for('index') }}" class="buscador">
         <input type="text" name="q" placeholder="DNI / Nombre / Apellido" value="{{ texto }}">
+        {% if ver_inactivos %}
+            <input type="hidden" name="estado" value="inactivos">
+        {% endif %}
         <button type="submit" class="btn btn-secondary">Buscar</button>
     </form>
 
     <div class="acciones">
         <a href="{{ url_for('nuevo_cliente') }}" class="btn btn-primary">+ Nuevo cliente</a>
+        {% if ver_inactivos %}
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Ver activos</a>
+        {% else %}
+            <a href="{{ url_for('index', estado='inactivos') }}" class="btn btn-secondary">Ver inactivos</a>
+        {% endif %}
     </div>
 
-    <h2>Resultados</h2>
+    <h2>{% if ver_inactivos %}Clientes inactivos{% else %}Resultados{% endif %}</h2>
 
     {% if clientes %}
         <div class="grid-clientes">

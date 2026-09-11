@@ -24,8 +24,9 @@ def verificar_clave():
 @app.route('/')
 def index():
     texto = request.args.get('q', '').strip()
-    clientes = database.buscar_clientes(texto)
-    return render_template('index.html', clientes=clientes, texto=texto)
+    ver_inactivos = request.args.get('estado') == 'inactivos'
+    clientes = database.buscar_clientes(texto, activo=not ver_inactivos)
+    return render_template('index.html', clientes=clientes, texto=texto, ver_inactivos=ver_inactivos)
 
 @app.route('/clientes/nuevo', methods=['GET', 'POST'])
 def nuevo_cliente():
@@ -34,16 +35,13 @@ def nuevo_cliente():
         nombre = request.form.get('nombre', '').strip()
         apellido = request.form.get('apellido', '').strip()
         email = request.form.get('email', '').strip() or None
-        edad = request.form.get('edad', '').strip() or None
+        fecha_nacimiento = request.form.get('fecha_nacimiento', '').strip() or None
 
         if not dni or not nombre or not apellido:
             flash('DNI, nombre y apellido son obligatorios.')
             return render_template('nuevo_cliente.html')
 
-        if edad:
-            edad = int(edad)
-
-        ok, error = database.crear_cliente(dni, nombre, apellido, email, edad)
+        ok, error = database.crear_cliente(dni, nombre, apellido, email, fecha_nacimiento)
 
         if ok:
             flash(f'Cliente {nombre} {apellido} registrado correctamente.')
@@ -83,16 +81,13 @@ def editar_cliente(cliente_id):
         nombre = request.form.get('nombre', '').strip()
         apellido = request.form.get('apellido', '').strip()
         email = request.form.get('email', '').strip() or None
-        edad = request.form.get('edad', '').strip() or None
+        fecha_nacimiento = request.form.get('fecha_nacimiento', '').strip() or None
 
         if not dni or not nombre or not apellido:
             flash('DNI, nombre y apellido son obligatorios.')
             return render_template('editar_cliente.html', cliente=cliente)
 
-        if edad:
-            edad = int(edad)
-
-        ok, error = database.actualizar_cliente(cliente_id, dni, nombre, apellido, email, edad)
+        ok, error = database.actualizar_cliente(cliente_id, dni, nombre, apellido, email, fecha_nacimiento)
 
         if ok:
             flash('Datos actualizados correctamente.')
@@ -158,6 +153,5 @@ def registrar_compra(cliente_id):
     return redirect(url_for('ver_cliente', cliente_id=cliente_id))
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
+    app.run(debug=True, port=5001)
     

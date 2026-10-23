@@ -5,7 +5,7 @@
     <title>Ruta de Cafés</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
     {% block header %}{% endblock %}
     {% block volver %}{% endblock %}
     <div class="contenedor">

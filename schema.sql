@@ -16,3 +16,12 @@ CREATE TABLE compras (
     es_cortesia BOOLEAN NOT NULL DEFAULT 0,
     FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
+
+CREATE TABLE cortesias_eliminadas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cliente_id INTEGER NOT NULL,
+    fecha_original DATETIME NOT NULL,
+    fecha_eliminacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    motivo TEXT NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+);

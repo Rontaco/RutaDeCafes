@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block volver %}
+    <a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}" class="btn-volver">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver
+    </a>
+{% endblock %}
+
+{% block content %}
+    <h1>Eliminar punto del progreso</h1>
+    <p>Estás por eliminar una compra paga de {{ cliente['nombre'] }} {{ cliente['apellido'] }}. Esta acción quita ese café del progreso hacia la próxima cortesía, y el motivo va a quedar guardado en un registro aparte. ¿Estás seguro de que querés continuar?</p>
+
+    <form method="POST" class="formulario">
+        <label for="motivo">Motivo:</label>
+        <textarea id="motivo" name="motivo" rows="3" required></textarea>
+
+        <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
+    </form>
+{% endblock %}

@@ -24,11 +24,11 @@
         </p>
     </div>
 
-        <div class="card">
+    <div class="card">
         <h2 style="margin-top:0;">Progreso hacia la próxima cortesía</h2>
 
         <div class="barra-progreso">
-            <div class="barra-progreso-relleno" style="width: { { (progreso.display / 7 * 100) | round(0, 'floor') }}%;"></div>
+            <div class="barra-progreso-relleno" style="width: {{ ((progreso.display / 7 * 100) | round(0, 'floor')) }}%;"></div>
         </div>
 
         <div class="progreso-tazas">
@@ -49,7 +49,7 @@
     </div>
 
     <div class="acciones">
-                <form method="POST" action="{{ url_for('registrar_compra', cliente_id=cliente['id']) }}">
+        <form method="POST" action="{{ url_for('registrar_compra', cliente_id=cliente['id']) }}">
             <button type="submit" class="btn {% if progreso.corresponde_cortesia %}btn-exito{% else %}btn-primary{% endif %}">
                 {% if progreso.corresponde_cortesia %}☕ Registrar cortesía{% else %}Registrar compra{% endif %}
             </button>
@@ -62,17 +62,34 @@
         {% endif %}
     </div>
 
-    <h2>Historial de compras</h2>
+    <h2>Historial de compras <span class="progreso-texto">(horario GMT-3)</span></h2>
     {% if historial %}
         <ul class="historial">
         {% for compra in historial %}
             <li>
-                {{ compra['fecha'] }}
-                {% if compra['es_cortesia'] %}— Cortesía{% else %}— Paga{% endif %}
+                {{ compra['fecha'] | gmt3 }}
+                {% if compra['es_cortesia'] %}
+                    — Cortesía
+                {% else %}
+                    — Paga
+                    <a href="{{ url_for('eliminar_compra', cliente_id=cliente['id'], compra_id=compra['id']) }}" class="link-eliminar">Eliminar</a>
+                {% endif %}
             </li>
         {% endfor %}
         </ul>
     {% else %}
         <p>Este cliente todavía no tiene compras registradas.</p>
+    {% endif %}
+
+    {% if eliminadas %}
+        <h2>Puntos de progreso eliminados</h2>
+        <ul class="historial">
+        {% for e in eliminadas %}
+            <li>
+                Compra del {{ e['fecha_original'] | gmt3 }} — eliminada el {{ e['fecha_eliminacion'] | gmt3 }}<br>
+                <span class="progreso-texto">Motivo: {{ e['motivo'] }}</span>
+            </li>
+        {% endfor %}
+        </ul>
     {% endif %}
 {% endblock %}

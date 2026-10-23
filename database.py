@@ -160,3 +160,95 @@ def reactivar_cliente(cliente_id):
     conn.execute('UPDATE clientes SET activo = 1 WHERE id = ?', (cliente_id,))
     conn.commit()
     conn.close()
+
+def eliminar_compra_progreso(compra_id, cliente_id, motivo):
+    """
+    Elimina físicamente una compra PAGA de la tabla 'compras' (resta un
+    punto del progreso del cliente hacia la próxima cortesía), y guarda
+    el motivo en la tabla separada 'cortesias_eliminadas' como registro
+    de auditoría. No modifica la estructura ni los datos existentes de
+    'compras' ni 'clientes'.
+    Solo afecta compras pagas (es_cortesia = 0); las cortesías ya
+    entregadas no se pueden eliminar con esta función.
+    Devuelve True si se eliminó, False si no se encontró una compra
+    paga con ese id para ese cliente.
+    """
+    conn = get_connection()
+
+    compra = conn.execute(
+        'SELECT fecha FROM compras WHERE id = ? AND cliente_id = ? AND es_cortesia = 0',
+        (compra_id, cliente_id)
+    ).fetchone()
+
+    if compra is None:
+        conn.close()
+        return False
+
+    conn.execute(
+        '''INSERT INTO cortesias_eliminadas (cliente_id, fecha_original, motivo)
+           VALUES (?, ?, ?)''',
+        (cliente_id, compra['fecha'], motivo)
+    )
+    conn.execute('DELETE FROM compras WHERE id = ?', (compra_id,))
+    conn.commit()
+    conn.close()
+    return True
+
+def obtener_progreso_eliminado(cliente_id):
+    """Devuelve el registro de puntos de progreso (compras pagas) eliminados de este cliente, más recientes primero."""
+    conn = get_connection()
+    filas = conn.execute(
+        '''SELECT fecha_original, fecha_eliminacion, motivo
+           FROM cortesias_eliminadas
+           WHERE cliente_id = ? ORDER BY fecha_eliminacion DESC''',
+        (cliente_id,)
+    ).fetchall()
+    conn.close()
+    return filas
+
+def obtener_proximos_a_cortesia(limite=10):
+    """
+    Devuelve los clientes activos ordenados por cercanía a la próxima
+    cortesía (de mayor a menor progreso dentro del ciclo actual de 7).
+    Se calcula recorriendo el progreso real de cada cliente activo,
+    igual que se hace en su ficha individual — no se guarda un ranking aparte.
+    """
+    conn = get_connection()
+    clientes = conn.execute(
+        'SELECT id, nombre, apellido FROM clientes WHERE activo = 1'
+    ).fetchall()
+    conn.close()
+
+    resultado = []
+    for c in clientes:
+        progreso = calcular_progreso(c['id'])
+        resultado.append({
+            'id': c['id'],
+            'nombre': c['nombre'],
+            'apellido': c['apellido'],
+            'display': progreso['display'],
+            'corresponde_cortesia': progreso['corresponde_cortesia']
+        })
+
+    resultado.sort(key=lambda x: x['display'], reverse=True)
+    return resultado[:limite]
+
+def obtener_top_cortesias(limite=10):
+    """
+    Devuelve los clientes activos con más cortesías recibidas en total
+    (histórico completo, no solo el ciclo actual), de mayor a menor.
+    Solo incluye clientes con al menos una cortesía.
+    """
+    conn = get_connection()
+    filas = conn.execute(
+        '''SELECT cl.id, cl.nombre, cl.apellido, COUNT(co.id) AS total_cortesias
+           FROM clientes cl
+           JOIN compras co ON co.cliente_id = cl.id AND co.es_cortesia = 1
+           WHERE cl.activo = 1
+           GROUP BY cl.id
+           ORDER BY total_cortesias DESC
+           LIMIT ?''',
+        (limite,)
+    ).fetchall()
+    conn.close()
+    return filas

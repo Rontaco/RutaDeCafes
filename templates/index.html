@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block body_class %}pagina-index{% endblock %}
+
 {% block header %}
     <header class="site-header">
         <div class="site-header-inner">
@@ -10,38 +12,86 @@
 {% endblock %}
 
 {% block content %}
-    <form method="GET" action="{{ url_for('index') }}" class="buscador">
-        <input type="text" name="q" placeholder="DNI / Nombre / Apellido" value="{{ texto }}">
-        {% if ver_inactivos %}
-            <input type="hidden" name="estado" value="inactivos">
-        {% endif %}
-        <button type="submit" class="btn btn-secondary">Buscar</button>
-    </form>
+    <div class="layout-principal">
+        <aside class="sidebar-proximas">
+            <div class="panel-lateral">
+                <h2>Próximas cortesías</h2>
+                {% if proximas %}
+                    <ul class="proxima-lista">
+                    {% for p in proximas %}
+                        <li>
+                            <a href="{{ url_for('ver_cliente', cliente_id=p.id) }}" class="proxima-item">
+                                <span class="nombre-proxima">{{ p.nombre }} {{ p.apellido }}</span>
+                                {% if p.corresponde_cortesia %}
+                                    <span class="badge-listo">Lista ☕</span>
+                                {% else %}
+                                    <span class="proxima-progreso">{{ p.display }}/7</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="progreso-texto">Todavía no hay datos suficientes.</p>
+                {% endif %}
+            </div>
+        </aside>
 
-    <div class="acciones">
-        <a href="{{ url_for('nuevo_cliente') }}" class="btn btn-primary">+ Nuevo cliente</a>
-        {% if ver_inactivos %}
-            <a href="{{ url_for('index') }}" class="btn btn-secondary">Ver activos</a>
-        {% else %}
-            <a href="{{ url_for('index', estado='inactivos') }}" class="btn btn-secondary">Ver inactivos</a>
-        {% endif %}
-    </div>
+        <div>
+            <form method="GET" action="{{ url_for('index') }}" class="buscador">
+                <input type="text" name="q" placeholder="DNI / Nombre / Apellido" value="{{ texto }}">
+                {% if ver_inactivos %}
+                    <input type="hidden" name="estado" value="inactivos">
+                {% endif %}
+                <button type="submit" class="btn btn-secondary">Buscar</button>
+            </form>
 
-    <h2>{% if ver_inactivos %}Clientes inactivos{% else %}Resultados{% endif %}</h2>
+            <div class="acciones">
+                <a href="{{ url_for('nuevo_cliente') }}" class="btn btn-primary">+ Nuevo cliente</a>
+                {% if ver_inactivos %}
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">Ver activos</a>
+                {% else %}
+                    <a href="{{ url_for('index', estado='inactivos') }}" class="btn btn-secondary">Ver inactivos</a>
+                {% endif %}
+            </div>
 
-    {% if clientes %}
-        <div class="grid-clientes">
-        {% for cliente in clientes %}
-            <a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}" class="cliente-card" style="text-decoration:none;">
-                <div>
-                    <div class="nombre">{{ cliente['nombre'] }} {{ cliente['apellido'] }}</div>
-                    <div class="dni">DNI: {{ cliente['dni'] }}</div>
+            <h2>{% if ver_inactivos %}Clientes inactivos{% else %}Resultados{% endif %}</h2>
+
+            {% if clientes %}
+                <div class="grid-clientes">
+                {% for cliente in clientes %}
+                    <a href="{{ url_for('ver_cliente', cliente_id=cliente['id']) }}" class="cliente-card" style="text-decoration:none;">
+                        <div>
+                            <div class="nombre">{{ cliente['nombre'] }} {{ cliente['apellido'] }}</div>
+                            <div class="dni">DNI: {{ cliente['dni'] }}</div>
+                        </div>
+                        <span>→</span>
+                    </a>
+                {% endfor %}
                 </div>
-                <span>→</span>
-            </a>
-        {% endfor %}
+            {% else %}
+                <p>No se encontraron clientes.</p>
+            {% endif %}
         </div>
-    {% else %}
-        <p>No se encontraron clientes.</p>
-    {% endif %}
+
+        <aside class="sidebar-proximas">
+            <div class="panel-lateral">
+                <h2>Top cortesías</h2>
+                {% if top_cortesias %}
+                    <ul class="proxima-lista">
+                    {% for t in top_cortesias %}
+                        <li>
+                            <a href="{{ url_for('ver_cliente', cliente_id=t['id']) }}" class="proxima-item">
+                                <span class="nombre-proxima">{{ t['nombre'] }} {{ t['apellido'] }}</span>
+                                <span class="proxima-progreso">{{ t['total_cortesias'] }} ☕</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="progreso-texto">Todavía nadie completó una cortesía.</p>
+                {% endif %}
+            </div>
+        </aside>
+    </div>
 {% endblock %}
